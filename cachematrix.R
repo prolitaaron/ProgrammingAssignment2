@@ -1,15 +1,34 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Creates matrix-like object with basic get/set functionality for a matrix, and get/set matrix inverse functionality
+## to store this data without needing to recalculate at every use
 
-## Write a short comment describing this function
+## "Vector" with getinverse/setinverse functionality to cache inverse value
 
 makeCacheMatrix <- function(x = matrix()) {
-
+	m <- NULL
+	set <- function(y) {
+		x <<- y
+		m <<- NULL
+	}
+	get <- function() x
+	setinverse <- function(solved) m <<- solved
+	getinverse <- function() m
+	list(set = set, get = get,
+			 setinverse = setinverse,
+			 getinverse = getinverse)
 }
 
 
-## Write a short comment describing this function
+## Retrieves cached data if available, otherwise generates inverse then caches and returns it
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+	m <- x$getinverse()
+	if(!is.null(m)) {
+		message("getting cached data")
+		return(m)
+	}
+	data <- x$get()
+	m <- solve(data, ...)
+	x$setinverse(m)
+	m
+}
 }
